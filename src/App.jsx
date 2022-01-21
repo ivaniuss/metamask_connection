@@ -8,6 +8,11 @@ const App = () => {
     const [connectionError, setConnectionError] = useState(null);
     useEffect(() => {
     if(window.ethereum){
+        const getAccs = async() => {
+            const [account] = await window.ethereum.request({method:'eth_accounts'})
+            setMetamaskAdr(account);
+        }
+        getAccs()
         window.ethereum.on('accountsChanged', (accounts) => {
             if (!accounts.length) {
                 setMetamaskAdr(null);
@@ -33,7 +38,6 @@ const App = () => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x3' }],
             });
-            localStorage.setItem('account', account);
             setMetamaskAdr(account);
             setConnectionError(null);
         }catch(e){
