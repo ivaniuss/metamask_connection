@@ -11,16 +11,16 @@ const App = () => {
         window.ethereum.on('accountsChanged', (accounts) => {
             if (!accounts.length) {
                 setMetamaskAdr(null);
-                window.ethereum.on('chainChanged', (chainId) => {
-                    if(chainId !== '0x3'){
-                        window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{chainId: '0x3'}]
-                        });
-                    }
-                });
             }
            
+        });
+        window.ethereum.on('chainChanged', (chainId) => {
+            if(chainId !== '0x3'){
+                window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{chainId: '0x3'}]
+                });
+            }
         });
     }
     },[])
@@ -41,11 +41,6 @@ const App = () => {
         }
     }
     
-
-    const handleLogout = async() => {
-        window.ethereum.on('disconnect',  (e) =>{console.log(e)});
-    }
-    
     return (
         <div className = 'container'>
             <h1> Get/Set Contract Interaction</h1>
@@ -55,9 +50,8 @@ const App = () => {
             : 
             <>
             <h3> Address: {metamaskAdr}</h3>
-                <button onClick = {() => handleLogout()}>Logout</button>
             </>}
-            {connectionError && <h3> {connectionError}</h3>}
+            {connectionError && <h3 className = 'container__error'> {connectionError}</h3>}
         </div>
     )
 };
