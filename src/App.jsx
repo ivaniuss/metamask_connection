@@ -12,8 +12,8 @@ const App = () => {
             if (!accounts.length) {
                 setMetamaskAdr(null);
             }
-           
         });
+        setMetamaskAdr(localStorage.getItem('account'))
         window.ethereum.on('chainChanged', (chainId) => {
             if(chainId !== '0x3'){
                 window.ethereum.request({
@@ -33,6 +33,7 @@ const App = () => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x3' }],
             });
+            localStorage.setItem('account', account);
             setMetamaskAdr(account);
             setConnectionError(null);
         }catch(e){
