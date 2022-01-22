@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
+import {ethers} from 'ethers';
 import "./App.css";
 
-
 const App = () => {
-    
+
     const [metamaskAdr, setMetamaskAdr] = useState(null);
     const [connectionError, setConnectionError] = useState(null);
+    const [currentBalance, setCurrentBalance] = useState(0);
     useEffect(() => {
     if(window.ethereum){
         const getAccs = async() => {
@@ -29,6 +30,14 @@ const App = () => {
         });
     }
     },[])
+
+    const getBalance = async() => {
+        if (metamaskAdr && window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum)
+            const balance = await provider.getBalance(metamaskAdr);
+            setCurrentBalance(ethers.utils.formatEther(balance));
+        }
+    }
 
     const handleConnection = async() =>{
         try{
@@ -55,6 +64,8 @@ const App = () => {
             : 
             <>
             <h3> Address: {metamaskAdr}</h3>
+                {currentBalance ? <h3> Balance: {Number.parseFloat(currentBalance).toFixed(2)} ETH </h3> : 
+                <button onClick = {() => getBalance()}> Balance </button>}
             </>}
             {connectionError && <h3 className = 'container__error'> {connectionError}</h3>}
         </div>
